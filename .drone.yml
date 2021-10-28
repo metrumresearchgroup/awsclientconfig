@@ -1,0 +1,25 @@
+kind: pipeline
+type: docker
+name: test
+
+steps:
+  - name: test
+    image: golang:latest
+    commands:
+      - go test
+  - name: integration
+    image: golang:latest
+    environment:
+      AWS_ACCESS_KEY_ID:
+        from_secret: AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY:
+        from_secret: AWS_SECRET_ACCESS_KEY
+      AWS_SESSION_TOKEN_KEY:
+        from_secret: AWS_SESSION_TOKEN_KEY
+    commands:
+      - go test --tags=integration
+  - name: lint
+    image: golang:latest
+    commands:
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.41.1
+      - golangci-lint run
