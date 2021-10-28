@@ -16,6 +16,8 @@ steps:
         from_secret: AWS_SECRET_ACCESS_KEY
       AWS_SESSION_TOKEN_KEY:
         from_secret: AWS_SESSION_TOKEN_KEY
+      AWS_TARGET_ARN:
+        from_secret: AWS_TARGET_ARN
     commands:
       - go test --tags=integration
   - name: lint

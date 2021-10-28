@@ -14,25 +14,24 @@ import (
 	. "github.com/metrumresearchgroup/awsclientconfig"
 )
 
-func fromEnv() aws.Credentials {
+func fromEnv() (aws.Credentials, string) {
 	akid := os.Getenv("AWS_ACCESS_KEY_ID")
 	sak := os.Getenv("AWS_SECRET_ACCESS_KEY")
 	st := os.Getenv("AWS_SESSION_TOKEN_KEY")
-
+	arn := os.Getenv("AWS_TARGET_ARN")
 	return aws.Credentials{
 		AccessKeyID:     akid,
 		SecretAccessKey: sak,
 		SessionToken:    st,
 		Source:          "environment",
-	}
+	}, arn
 }
 
 func Test_StsLogin(tt *testing.T) {
 	t := wrapt.WrapT(tt)
 
-	creds := fromEnv()
+	creds, arn := fromEnv()
 	region := "us-east-1"
-	arn := "arn:aws:iam::654062675744:role/test-cognito-permissions"
 
 	cc, err := NewClientConfig(creds, region, arn)
 	t.R.NoError(err)
