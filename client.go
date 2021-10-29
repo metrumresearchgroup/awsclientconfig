@@ -124,7 +124,7 @@ func (cc ClientConfig) Login(ctx context.Context, sessionName string, optFns ...
 
 	// If the ARN is set, and matches the user, return the original.
 	if aws.ToString(identity.Arn) == cc.ARN {
-		return aws.Config{}, nil
+		return awsConfig, nil
 	}
 
 	// Use current role/user credentials to assume another role
