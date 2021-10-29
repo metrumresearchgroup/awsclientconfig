@@ -29,7 +29,7 @@ func main() {
 		creds := aws.Credentials{
 			AccessKeyID:     os.Getenv("AWS_ACCESS_KEY_ID"),
 			SecretAccessKey: os.Getenv("AWS_SECRET_ACCESS_KEY"),
-			SessionToken:    os.Getenv("AWS_SECRET_ACCESS_KEY"),
+			SessionToken:    os.Getenv("AWS_SESSION_TOKEN"),
 			Source:          "environment",
 		}
 		region := os.Getenv("AWS_REGION")
