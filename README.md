@@ -21,9 +21,15 @@ import (
 )
 
 func main() {
+	var err error
+
+	// We need to set up the basic configuration structure.
+	// Don't worry about how we handle some of these things,
+	// It's all verified before using, so if you put in a bad
+	// value or have an insufficient set of credentials, we
+	// catch it before sending on to AWS here.
 	var (
 		clientConfig awsclientconfig.ClientConfig
-		err          error
 	)
 	{
 		creds := aws.Credentials{
@@ -35,13 +41,7 @@ func main() {
 		region := os.Getenv("AWS_REGION")
 		arn := os.Getenv("AWS_TARGET_ARN")
 
-		// We need to set up the basic configuration structure.
-		// Don't worry about how we handle some of these things,
-		// It's all verified before using, so if you put in a bad
-		// value or have an insufficient set of credentials, we
-		// catch it before sending on to AWS here.
-		clientConfig, err = awsclientconfig.New(creds, region, arn)
-		if err != nil {
+		if clientConfig, err = awsclientconfig.New(creds, region, arn); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Configuration error: %v", err)
 			os.Exit(1)
 		}
@@ -53,8 +53,7 @@ func main() {
 		cognitoAwsConfig aws.Config
 	)
 	{
-		cognitoAwsConfig, err = clientConfig.Login(context.Background(), "test-cognito-permissions")
-		if err != nil {
+		if cognitoAwsConfig, err = clientConfig.Login(context.Background(), "test-cognito-permissions"); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Login error: %v", err)
 			os.Exit(1)
 		}
@@ -66,8 +65,7 @@ func main() {
 		cognitoProvider cognitoidentityprovider.Client
 	)
 	{
-		cognitoProvider, err = cognitoidentityprovider.NewFromConfig(cognitoAwsConfig)
-		if err != nil {
+		if cognitoProvider, err = cognitoidentityprovider.NewFromConfig(cognitoAwsConfig); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
 			os.Exit(1)
 		}
@@ -79,9 +77,8 @@ func main() {
 	)
 	{
 		token := os.Getenv("COGNITO_TOKEN")
-		
-		user, err = cognitoProvider.GetUser(context.Background(), &cognitoidentityprovider.GetUserInput{AccessToken: token})
-		if err != nil {
+
+		if user, err = cognitoProvider.GetUser(context.Background(), &cognitoidentityprovider.GetUserInput{AccessToken: token}); err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
 			os.Exit(1)
 		}
