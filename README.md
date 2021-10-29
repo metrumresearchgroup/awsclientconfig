@@ -73,13 +73,13 @@ func main() {
 		}
 	}
 
-	token := os.Getenv("COGNITO_TOKEN")
-
 	// Then we use the service.
 	var (
 		user cognitoidentityprovider.GetUserOutput
 	)
 	{
+		token := os.Getenv("COGNITO_TOKEN")
+		
 		user, err = cognitoProvider.GetUser(context.Background(), &cognitoidentityprovider.GetUserInput{AccessToken: token})
 		if err != nil {
 			_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
