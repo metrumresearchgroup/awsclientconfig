@@ -21,48 +21,70 @@ import (
 )
 
 func main() {
-	creds := aws.Credentials{
-		AccessKeyID:     os.Getenv("AWS_ACCESS_KEY_ID"),
-		SecretAccessKey: os.Getenv("AWS_SECRET_ACCESS_KEY"),
-		SessionToken:    os.Getenv("AWS_SECRET_ACCESS_KEY"),
-		Source:          "environment",
-	}
-	region := os.Getenv("AWS_REGION")
-	arn := os.Getenv("AWS_TARGET_ARN")
-	token := os.Getenv("COGNITO_TOKEN")
+	var (
+		clientConfig awsclientconfig.ClientConfig
+		err          error
+	)
+	{
+		creds := aws.Credentials{
+			AccessKeyID:     os.Getenv("AWS_ACCESS_KEY_ID"),
+			SecretAccessKey: os.Getenv("AWS_SECRET_ACCESS_KEY"),
+			SessionToken:    os.Getenv("AWS_SECRET_ACCESS_KEY"),
+			Source:          "environment",
+		}
+		region := os.Getenv("AWS_REGION")
+		arn := os.Getenv("AWS_TARGET_ARN")
 
-	// We need to set up the basic configuration structure.
-	// Don't worry about how we handle some of these things,
-	// It's all verified before using, so if you put in a bad
-	// value or have an insufficient set of credentials, we
-	// catch it before sending on to AWS here.
-	config, err := awsclientconfig.New(creds, region, arn)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Configuration error: %v", err)
-		os.Exit(1)
+		// We need to set up the basic configuration structure.
+		// Don't worry about how we handle some of these things,
+		// It's all verified before using, so if you put in a bad
+		// value or have an insufficient set of credentials, we
+		// catch it before sending on to AWS here.
+		clientConfig, err = awsclientconfig.New(creds, region, arn)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "Configuration error: %v", err)
+			os.Exit(1)
+		}
 	}
 
 	// We then log in using this config, and the ARN will 
 	// automatically become an STS "sudo" to the role, if present.
-	cognitoAwsConfig, err := config.Login(context.Background(), "test-cognito-permissions")
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Login error: %v", err)
-		os.Exit(1)
+	var (
+		cognitoAwsConfig aws.Config
+	)
+	{
+		cognitoAwsConfig, err = clientConfig.Login(context.Background(), "test-cognito-permissions")
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "Login error: %v", err)
+			os.Exit(1)
+		}
 	}
 
 	// Since what we get back is an opaque AWS config, we can
 	// then use that to start new services from this config.
-	svc, err := cognitoidentityprovider.NewFromConfig(cognitoAwsConfig)
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
-		os.Exit(1)
+	var (
+		cognitoProvider cognitoidentityprovider.Client
+	)
+	{
+		cognitoProvider, err = cognitoidentityprovider.NewFromConfig(cognitoAwsConfig)
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
+			os.Exit(1)
+		}
 	}
 
-	// Then we act on the service.
-	user, err := svc.GetUser(context.Background(), &cognitoidentityprovider.GetUserInput{AccessToken: token})
-	if err != nil {
-		_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
-		os.Exit(1)
+	token := os.Getenv("COGNITO_TOKEN")
+
+	// Then we use the service.
+	var (
+		user cognitoidentityprovider.GetUserOutput
+	)
+	{
+		user, err = cognitoProvider.GetUser(context.Background(), &cognitoidentityprovider.GetUserInput{AccessToken: token})
+		if err != nil {
+			_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
+			os.Exit(1)
+		}
 	}
 
 	fmt.Println(user)
