@@ -33,7 +33,7 @@ func Test_StsLogin(tt *testing.T) {
 	creds, arn := fromEnv()
 	region := "us-east-1"
 
-	cc, err := NewClientConfig(creds, region, arn)
+	cc, err := New(creds, region, arn)
 	t.R.NoError(err)
 
 	_, err = cc.Login(context.Background(), "new-session")

@@ -177,7 +177,7 @@ func TestNewClientConfig(tt *testing.T) {
 	for _, test := range tests {
 		tt.Run(test.name, func(tt *testing.T) {
 			t := wrapt.WrapT(tt)
-			got, err := NewClientConfig(test.args.credentials, test.args.region, test.args.arn)
+			got, err := New(test.args.credentials, test.args.region, test.args.arn)
 
 			t.R.WantError(test.wantErr, err)
 			t.R.Equal(got, test.want)

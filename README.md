@@ -31,24 +31,34 @@ func main() {
 	arn := os.Getenv("AWS_TARGET_ARN")
 	token := os.Getenv("COGNITO_TOKEN")
 
-	config, err := awsclientconfig.NewClientConfig(creds, region, arn)
+	// We need to set up the basic configuration structure.
+	// Don't worry about how we handle some of these things,
+	// It's all verified before using, so if you put in a bad
+	// value or have an insufficient set of credentials, we
+	// catch it before sending on to AWS here.
+	config, err := awsclientconfig.New(creds, region, arn)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Configuration error: %v", err)
 		os.Exit(1)
 	}
 
+	// We then log in using this config, and the ARN will 
+	// automatically become an STS "sudo" to the role, if present.
 	cognitoAwsConfig, err := config.Login(context.Background(), "test-cognito-permissions")
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Login error: %v", err)
 		os.Exit(1)
 	}
 
+	// Since what we get back is an opaque AWS config, we can
+	// then use that to start new services from this config.
 	svc, err := cognitoidentityprovider.NewFromConfig(cognitoAwsConfig)
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)
 		os.Exit(1)
 	}
 
+	// Then we act on the service.
 	user, err := svc.GetUser(context.Background(), &cognitoidentityprovider.GetUserInput{AccessToken: token})
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Spawn cognito client: %v", err)

@@ -26,7 +26,7 @@ type ClientConfig struct {
 	ARN         string
 }
 
-func NewClientConfig(credentials aws.Credentials, region, arn string) (ClientConfig, error) {
+func New(credentials aws.Credentials, region, arn string) (ClientConfig, error) {
 	if err := ValidateCredentials(credentials); err != nil {
 		return ClientConfig{}, err
 	}
@@ -140,7 +140,7 @@ func (cc ClientConfig) Login(ctx context.Context, sessionName string, optFns ...
 
 	canExpire := aws.ToTime(aro.Credentials.Expiration) != time.Time{}
 
-	ncc, err := NewClientConfig(aws.Credentials{
+	ncc, err := New(aws.Credentials{
 		AccessKeyID:     aws.ToString(aro.Credentials.AccessKeyId),
 		SecretAccessKey: aws.ToString(aro.Credentials.SecretAccessKey),
 		SessionToken:    aws.ToString(aro.Credentials.SessionToken),
