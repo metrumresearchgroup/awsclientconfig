@@ -82,9 +82,9 @@ func (cc *ClientConfig) Login(ctx context.Context, sessionName string, optFns ..
 			},
 			cc.Region,
 			cc.ARN,
-			cc.MapId,
-			cc.AppIdentifier,
-			cc.Refresh,
+			WithMapID(cc.MapId),
+			WithAppIdentifier(cc.AppIdentifier),
+			WithRefreshInterval(cc.Refresh),
 		); err != nil {
 			return aws.Config{}, err
 		}

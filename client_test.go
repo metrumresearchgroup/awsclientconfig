@@ -30,9 +30,10 @@ func TestNew(tt *testing.T) {
 				},
 			},
 			want: &ClientConfig{
-				AccessKey: "AKIAASDFASDFASDF",
-				SecretKey: "Secretkey",
-				Refresh:   300000000000,
+				AccessKey:     "AKIAASDFASDFASDF",
+				SecretKey:     "Secretkey",
+				Refresh:       300000000000,
+				AppIdentifier: "awsclientconfig",
 			},
 		},
 		{
@@ -46,11 +47,12 @@ func TestNew(tt *testing.T) {
 				region: "us-east-2",
 			},
 			want: &ClientConfig{
-				AccessKey:    "ASIAASDFASDFASDF",
-				SecretKey:    "Secretkey",
-				SessionToken: "Sessiontoken",
-				Region:       "us-east-2",
-				Refresh:      300000000000,
+				AccessKey:     "ASIAASDFASDFASDF",
+				SecretKey:     "Secretkey",
+				SessionToken:  "Sessiontoken",
+				Region:        "us-east-2",
+				Refresh:       300000000000,
+				AppIdentifier: "awsclientconfig",
 			},
 		},
 		{
@@ -63,7 +65,7 @@ func TestNew(tt *testing.T) {
 	for _, test := range tests {
 		tt.Run(test.name, func(tt *testing.T) {
 			t := wrapt.WrapT(tt)
-			got, err := New(test.args.credentials, test.args.region, test.args.arn, "", "", 0)
+			got, err := New(test.args.credentials, test.args.region, test.args.arn)
 
 			t.R.WantError(test.wantErr, err)
 			t.R.Equal(got, test.want)
