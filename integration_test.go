@@ -33,7 +33,7 @@ func Test_StsLogin_SuccessSTS(tt *testing.T) {
 	creds, arn := fromEnv()
 	region := "us-east-1"
 
-	cc, err := New(creds, region, arn)
+	cc, err := New(creds, region, arn, "", "", 0)
 	t.R.NoError(err)
 
 	cli, err := cc.Login(context.Background(), "new-session")
@@ -50,7 +50,7 @@ func Test_StsLogin_SuccessSkipARN(tt *testing.T) {
 	// clearing ARN, going to be a normal login as user.
 	arn = ""
 
-	cc, err := New(creds, region, arn)
+	cc, err := New(creds, region, arn, "", "", 0)
 	t.R.NoError(err)
 
 	cli, err := cc.Login(context.Background(), "new-session")
@@ -73,7 +73,7 @@ func Test_StsLogin_FailureBadKey(tt *testing.T) {
 	creds.SecretAccessKey = string(fuzz)
 	region := "us-east-1"
 
-	cc, err := New(creds, region, arn)
+	cc, err := New(creds, region, arn, "", "", 0)
 	t.R.NoError(err)
 
 	cli, err := cc.Login(context.Background(), "new-session")
@@ -96,7 +96,7 @@ func Test_StsLogin_FailureBadArn(tt *testing.T) {
 	creds.SecretAccessKey = string(fuzz)
 	region := "us-east-1"
 
-	cc, err := New(creds, region, arn)
+	cc, err := New(creds, region, arn, "", "", 0)
 	t.R.NoError(err)
 
 	cli, err := cc.Login(context.Background(), "new-session")
