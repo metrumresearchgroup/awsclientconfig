@@ -8,7 +8,7 @@ import (
 
 // ValidateCredentials validates that the correct combinations of settings
 // are available in a combination that AWS would check, without needing
-// to log in to confirm. Its returning of nil is not a predictor of whether
+// to log in to confirm. Returning nil is not a prediction of whether
 // keys are correct, only that they aren't incorrect in format.
 func ValidateCredentials(c aws.Credentials) error {
 	if c.AccessKeyID == "" {

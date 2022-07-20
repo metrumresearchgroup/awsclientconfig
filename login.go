@@ -14,7 +14,7 @@ import (
 
 // Login signs in to the aws service and retrieves an aws.Config for passing
 // to aws service clients.
-func (cc ClientConfig) Login(ctx context.Context, sessionName string, optFns ...func(loadOptions *config.LoadOptions) error) (aws.Config, error) {
+func (cc *ClientConfig) Login(ctx context.Context, sessionName string, optFns ...func(loadOptions *config.LoadOptions) error) (aws.Config, error) {
 	var (
 		err       error
 		awsConfig aws.Config
@@ -68,7 +68,7 @@ func (cc ClientConfig) Login(ctx context.Context, sessionName string, optFns ...
 
 	// Create a new client configuration for the STS data.
 	var (
-		newClientConfig ClientConfig
+		newClientConfig *ClientConfig
 	)
 	{
 		if newClientConfig, err = New(
@@ -76,12 +76,15 @@ func (cc ClientConfig) Login(ctx context.Context, sessionName string, optFns ...
 				AccessKeyID:     aws.ToString(creds.AccessKeyId),
 				SecretAccessKey: aws.ToString(creds.SecretAccessKey),
 				SessionToken:    aws.ToString(creds.SessionToken),
-				Source:          cc.Credentials.Source,
+				Source:          "awsclientconfig",
 				CanExpire:       aws.ToTime(creds.Expiration) != time.Time{},
 				Expires:         aws.ToTime(creds.Expiration),
 			},
 			cc.Region,
 			cc.ARN,
+			WithMapID(cc.MapId),
+			WithAppIdentifier(cc.AppIdentifier),
+			WithRefreshInterval(cc.Refresh),
 		); err != nil {
 			return aws.Config{}, err
 		}
@@ -91,7 +94,7 @@ func (cc ClientConfig) Login(ctx context.Context, sessionName string, optFns ...
 	return newClientConfig.loadConfig(ctx, optFns...)
 }
 
-func (cc ClientConfig) loadConfig(ctx context.Context, optFns ...func(loadOptions *config.LoadOptions) error) (aws.Config, error) {
+func (cc *ClientConfig) loadConfig(ctx context.Context, optFns ...func(loadOptions *config.LoadOptions) error) (aws.Config, error) {
 	var o opts
 
 	copy(o.fns, optFns)
@@ -104,7 +107,7 @@ func (cc ClientConfig) loadConfig(ctx context.Context, optFns ...func(loadOption
 
 	o.add(config.WithCredentialsProvider(
 		credentials.StaticCredentialsProvider{
-			Value: cc.Credentials,
+			Value: cc.Credentials("awsclientconfig"),
 		},
 	))
 

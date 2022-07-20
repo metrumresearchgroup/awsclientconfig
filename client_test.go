@@ -4,7 +4,6 @@ import (
 	"testing"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
-
 	"github.com/metrumresearchgroup/wrapt"
 
 	. "github.com/metrumresearchgroup/awsclientconfig"
@@ -19,7 +18,7 @@ func TestNew(tt *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    ClientConfig
+		want    *ClientConfig
 		wantErr bool
 	}{
 		{
@@ -30,11 +29,11 @@ func TestNew(tt *testing.T) {
 					SecretAccessKey: "Secretkey",
 				},
 			},
-			want: ClientConfig{
-				Credentials: aws.Credentials{
-					AccessKeyID:     "AKIAASDFASDFASDF",
-					SecretAccessKey: "Secretkey",
-				},
+			want: &ClientConfig{
+				AccessKey:     "AKIAASDFASDFASDF",
+				SecretKey:     "Secretkey",
+				Refresh:       300000000000,
+				AppIdentifier: "awsclientconfig",
 			},
 		},
 		{
@@ -47,19 +46,19 @@ func TestNew(tt *testing.T) {
 				},
 				region: "us-east-2",
 			},
-			want: ClientConfig{
-				Credentials: aws.Credentials{
-					AccessKeyID:     "ASIAASDFASDFASDF",
-					SecretAccessKey: "Secretkey",
-					SessionToken:    "Sessiontoken",
-				},
-				Region: "us-east-2",
+			want: &ClientConfig{
+				AccessKey:     "ASIAASDFASDFASDF",
+				SecretKey:     "Secretkey",
+				SessionToken:  "Sessiontoken",
+				Region:        "us-east-2",
+				Refresh:       300000000000,
+				AppIdentifier: "awsclientconfig",
 			},
 		},
 		{
 			name:    "failure to prove validation runs",
 			args:    args{},
-			want:    ClientConfig{},
+			want:    nil,
 			wantErr: true,
 		},
 	}
