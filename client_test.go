@@ -30,10 +30,9 @@ func TestNew(tt *testing.T) {
 				},
 			},
 			want: &ClientConfig{
-				AccessKey:     "AKIAASDFASDFASDF",
-				SecretKey:     "Secretkey",
-				Refresh:       300000000000,
-				AppIdentifier: "awsclientconfig",
+				AccessKey: "AKIAASDFASDFASDF",
+				SecretKey: "Secretkey",
+				Refresh:   300000000000,
 			},
 		},
 		{
@@ -47,12 +46,11 @@ func TestNew(tt *testing.T) {
 				region: "us-east-2",
 			},
 			want: &ClientConfig{
-				AccessKey:     "ASIAASDFASDFASDF",
-				SecretKey:     "Secretkey",
-				SessionToken:  "Sessiontoken",
-				Region:        "us-east-2",
-				Refresh:       300000000000,
-				AppIdentifier: "awsclientconfig",
+				AccessKey:    "ASIAASDFASDFASDF",
+				SecretKey:    "Secretkey",
+				SessionToken: "Sessiontoken",
+				Region:       "us-east-2",
+				Refresh:      300000000000,
 			},
 		},
 		{
