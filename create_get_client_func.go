@@ -1,4 +1,4 @@
-package client
+package awsclientconfig
 
 import (
 	"context"
