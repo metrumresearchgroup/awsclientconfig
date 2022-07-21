@@ -46,10 +46,6 @@ func New(credentials aws.Credentials, region, arn string, opts ...func(*ClientCo
 		o(cc)
 	}
 
-	if cc.AppIdentifier == "" {
-		cc.AppIdentifier = "awsclientconfig"
-	}
-
 	if cc.Refresh == 0 {
 		cc.Refresh = time.Minute * 5
 	}
