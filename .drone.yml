@@ -6,7 +6,7 @@ steps:
   - name: test
     image: golang:latest
     commands:
-      - go test
+      - go test -race
   - name: integration
     image: golang:latest
     environment:
@@ -23,5 +23,5 @@ steps:
   - name: lint
     image: golang:latest
     commands:
-      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.47.0
+      - curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.50.0
       - golangci-lint run
