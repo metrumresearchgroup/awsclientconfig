@@ -39,6 +39,8 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 
 		// once is to make sure we only ever mark done one time
 		once := &sync.Once{}
+
+		// collect the done channel once so we don't keep copying a reference
 		doneCh := ctx.Done()
 
 		for {
@@ -52,7 +54,7 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 				// we'll pass client and err on outside this loop
 			}
 
-			time.Sleep(1)
+			time.Sleep(5 * time.Second)
 		}
 	}()
 
