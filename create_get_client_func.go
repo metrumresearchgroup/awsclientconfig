@@ -54,8 +54,6 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 				once.Do(firstCreation.Done)
 				// we'll pass client and err on outside this loop
 			}
-
-			time.Sleep(5 * time.Second)
 		}
 	}()
 
