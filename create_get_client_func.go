@@ -40,16 +40,21 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 		// once is to make sure we only ever mark done one time
 		once := &sync.Once{}
 
+		// collect the done channel once so we don't keep copying a reference
+		doneCh := ctx.Done()
+
 		for {
 			select {
 			// global context is closed (server is shut down)
-			case <-ctx.Done():
-				break
+			case <-doneCh:
+				return
 			case <-ticker.C:
 				cli, err = createClient(ctx, mtx, loginor)
 				once.Do(firstCreation.Done)
 				// we'll pass client and err on outside this loop
 			}
+
+			time.Sleep(5 * time.Second)
 		}
 	}()
 
