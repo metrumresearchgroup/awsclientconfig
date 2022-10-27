@@ -36,6 +36,7 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 		// ticker sets the cadence of refreshes. ZBT ticks immediately
 		// upon creation.
 		ticker := zbt.NewTicker(refresh)
+		defer ticker.Stop()
 
 		// once is to make sure we only ever mark done one time
 		once := &sync.Once{}
