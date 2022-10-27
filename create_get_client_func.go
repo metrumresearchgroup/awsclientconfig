@@ -52,7 +52,7 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 				// we'll pass client and err on outside this loop
 			}
 
-			// time.Sleep(0)
+			time.Sleep(0)
 		}
 	}()
 
