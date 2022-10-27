@@ -47,7 +47,7 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 			select {
 			// global context is closed (server is shut down)
 			case <-doneCh:
-				break
+				return
 			case <-ticker.C:
 				cli, err = createClient(ctx, mtx, loginor)
 				once.Do(firstCreation.Done)
