@@ -39,11 +39,12 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 
 		// once is to make sure we only ever mark done one time
 		once := &sync.Once{}
+		doneCh := ctx.Done()
 
 		for {
 			select {
 			// global context is closed (server is shut down)
-			case <-ctx.Done():
+			case <-doneCh:
 				break
 			case <-ticker.C:
 				cli, err = createClient(ctx, mtx, loginor)
@@ -51,7 +52,7 @@ func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClie
 				// we'll pass client and err on outside this loop
 			}
 
-			time.Sleep(10 * time.Millisecond)
+			// time.Sleep(0)
 		}
 	}()
 
