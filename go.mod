@@ -1,4 +1,4 @@
-module github.com/metrumresearchgroup/awsclientconfig
+module github.com/shairozan/awsclientconfig
 
 go 1.18
 
