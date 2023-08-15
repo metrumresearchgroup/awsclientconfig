@@ -18,14 +18,14 @@ var AccessKeyPattern = regexp.MustCompile(`^[\w]+$`)
 // ClientConfig contains everything to login and perform
 // STS transition to another ARN, if set.
 type ClientConfig struct {
-	AccessKey     string        `mapstructure:"access-key" json:"access_key"`
-	SecretKey     string        `mapstructure:"secret-key" json:"secret_key"`
-	SessionToken  string        `mapstructure:"session-token" json:"session_token"`
+	AccessKey     string        `mapstructure:"access_key" json:"access_key"`
+	SecretKey     string        `mapstructure:"secret_key" json:"secret_key"`
+	SessionToken  string        `mapstructure:"session_token" json:"session_token"`
 	Region        string        `mapstructure:"region" json:"region"`
 	ARN           string        `mapstructure:"arn" json:"arn"`
-	MapId         string        `mapstructure:"map-id" json:"map_id"`
-	AppIdentifier string        `mapstructure:"application-identifier" json:"app_identifier"`
-	Refresh       time.Duration `mapstructure:"refresh-duration" json:"refresh"`
+	MapId         string        `mapstructure:"map_id" json:"map_id"`
+	AppIdentifier string        `mapstructure:"application_identifier" json:"app_identifier"`
+	Refresh       time.Duration `mapstructure:"refresh_duration" json:"refresh"`
 }
 
 // New creates a new ClientConfig, after verifying parameters are complete.
