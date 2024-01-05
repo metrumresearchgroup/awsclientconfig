@@ -14,6 +14,7 @@ type Loginor interface {
 	Login(ctx context.Context, sessionName string, optFns ...func(loadOptions *config.LoadOptions) error) (aws.Config, error)
 }
 
+//nolint:unparam
 func CreateGetClientFunc[T any](ctx context.Context, loginor Loginor, createClient func(ctx context.Context, mtx *sync.RWMutex, loginor Loginor) (T, error),
 	refresh time.Duration) (func() (T, error), error) {
 	// these are the closed-over vars we want to return to users.

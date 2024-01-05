@@ -38,22 +38,22 @@ run:
 
 linters:
   enable:
-    - errcheck
-    - gosimple
-    - govet
-    - ineffassign
-    - staticcheck
-    - typecheck
-    - unused
-    - gosec
-    - unparam
-    - unconvert
     - dupl
+    - errcheck
     - errorlint
     - exhaustive
     - gochecknoinits
-    - goimports
-    - nlreturn
-    - whitespace
     - godot
+    - goimports
+    - gosec
+    - gosimple
+    - govet
+    - ineffassign
     - nakedret
+    - nlreturn
+    - staticcheck
+    - typecheck
+    - unconvert
+    - unparam
+    - unused
+    - whitespace
